@@ -172,8 +172,8 @@
         <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="text-center md:text-left">
-                    <h1 class="text-2xl font-bold text-purple-800 font-title">El Tarot de Mary</h1>
-                    <p class="text-sm text-gray-500">Aprende paso a paso, sin prisa.</p>
+                    <h1 class="text-2xl font-bold text-purple-800 font-title">Tarot para Mary</h1>
+                    <p class="text-sm text-gray-500">Amoooooor, mira, para ti, ojala lo uses.</p>
                 </div>
                 
                 <nav class="flex space-x-4 items-center">
@@ -195,12 +195,12 @@
                             <p class="text-xs font-bold text-gray-400 uppercase mb-2 border-b pb-1">Accesibilidad</p>
                             
                             <button onclick="toggleDarkMode()" class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 rounded-lg flex items-center justify-between transition-colors mb-2">
-                                <span>Modo Oscuro</span>
+                                <span>Modo Oscuro(sin derechos)</span>
                                 <i class="fa-solid fa-moon"></i>
                             </button>
                             
                             <div class="px-3 py-2 text-sm text-gray-700 flex flex-col gap-2">
-                                <span class="font-semibold">Tamaño de letra:</span>
+                                <span class="font-semibold">Tamaño de letra(para que cuides tus preciosos ojos):</span>
                                 <div class="flex justify-between items-center bg-gray-50 rounded-lg p-1 border">
                                     <button onclick="changeFontSize(-1)" class="flex-1 hover:bg-gray-200 py-1 rounded text-lg font-bold" title="Reducir">A-</button>
                                     <div class="w-px h-4 bg-gray-300 mx-1"></div>
@@ -242,8 +242,8 @@
         <!-- VISTA 2: PRÁCTICA -->
         <section id="sec-practica" class="hidden">
             <div class="text-center mb-6">
-                <h2 class="text-xl font-title text-purple-800">Ponte a prueba, Mary</h2>
-                <p class="text-gray-600 text-sm">Piensa el significado y toca la carta para ver si acertaste.</p>
+                <h2 class="text-xl font-title text-purple-800">Ponte a prueba mi amor</h2>
+                <p class="text-gray-600 text-sm">Piensa el significado y toca la carta para ver si acertaste, sin trampas, rogaria.</p>
             </div>
 
             <div class="flip-card mb-8" id="flashcard" onclick="voltearCarta()">
@@ -290,13 +290,13 @@
         // Base de datos simplificada para fácil aprendizaje
         const cartas = [
             // --- ARCANOS MAYORES ---
-            { nombre: "0. El Loco", palo: "mayores", icon: "fa-star", d: "Nuevos inicios, espontaneidad, dar un salto de fe.", i: "Imprudencia, miedo a arriesgarse.", nota: "A veces hay que dar el salto, mi amor. Yo siempre estaré para atraparte." },
+            { nombre: "0. El Loco", palo: "mayores", icon: "fa-star", d: "Nuevos inicios, espontaneidad, dar un salto de fe.", i: "Imprudencia, miedo a arriesgarse.", nota: "Mil veces empezar desde cero, y ojala que todas esas estando juntos" },
             { nombre: "I. El Mago", palo: "mayores", icon: "fa-star", d: "Poder de manifestación, tienes las herramientas necesarias, acción.", i: "Potencial desperdiciado, engaños.", nota: "Tienes todo el poder dentro de ti, eres magia para mi." },
             { nombre: "II. La Sacerdotisa", palo: "mayores", icon: "fa-star", d: "Intuición, misterio, escuchar tu voz interior.", i: "Ignorar tus instintos, secretos ocultos.", nota: "Confía en lo que sientes, que tu corazón siente todo tan perfecto." },
-            { nombre: "III. La Emperatriz", palo: "mayores", icon: "fa-star", d: "Abundancia, feminidad, creatividad, nutrición emocional.", i: "Dependencia, bloqueo creativo, descuido personal.", nota: "Eres eso para mi, hermosa, fuerte, llena de luz, un poquito enojona ;D." },
+            { nombre: "III. La Emperatriz", palo: "mayores", icon: "fa-star", d: "Abundancia, feminidad, creatividad, nutrición emocional.", i: "Dependencia, bloqueo creativo, descuido personal.", nota: "Eres eso para mi, hermosa, fuerte, llena de luz y solo un poquito enojona ;D." },
             { nombre: "IV. El Emperador", palo: "mayores", icon: "fa-star", d: "Estructura, autoridad, liderazgo, estabilidad.", i: "Rigidez, exceso de control, falta de disciplina." },
             { nombre: "V. El Hierofante", palo: "mayores", icon: "fa-star", d: "Tradición, aprendizaje, creencias compartidas.", i: "Rebeldía, romper las normas establecidas." },
-            { nombre: "VI. Los Enamorados", palo: "mayores", icon: "fa-star", d: "Amor, valores compartidos, decisiones importantes.", i: "Desarmonía, malas decisiones relacionales.", nota: "Tú y yo, siempre. Eres la mejor decisión de mi vida." },
+            { nombre: "VI. Los Enamorados", palo: "mayores", icon: "fa-star", d: "Amor, valores compartidos, decisiones importantes.", i: "Desarmonía, malas decisiones relacionales.", nota: "Nosotros, Iiiiiiiiih" },
             { nombre: "VII. El Carro", palo: "mayores", icon: "fa-star", d: "Determinación, voluntad, avanzar hacia el éxito.", i: "Pérdida de control, obstáculos, falta de dirección." },
             { nombre: "VIII. La Fuerza", palo: "mayores", icon: "fa-star", d: "Coraje, compasión, dominar emociones con amor.", i: "Inseguridad, debilidad emocional.", nota: "Admiro tu fuerza más de lo que imaginas." },
             { nombre: "IX. El Ermitaño", palo: "mayores", icon: "fa-star", d: "Búsqueda interior, soledad voluntaria, sabiduría.", i: "Aislamiento excesivo, soledad no deseada." },
@@ -309,7 +309,7 @@
             { nombre: "XVI. La Torre", palo: "mayores", icon: "fa-star", d: "Cambio repentino, caos que destruye lo falso.", i: "Evitar el desastre, miedo a la verdad." },
             { nombre: "XVII. La Estrella", palo: "mayores", icon: "fa-star", d: "Esperanza, sanación, inspiración, fe.", i: "Desesperanza, falta de fe.", nota: "Tú eres mi estrella, guiame que te seguire." },
             { nombre: "XVIII. La Luna", palo: "mayores", icon: "fa-star", d: "Ilusiones, miedos subconscientes, confusión.", i: "Superar ansiedades, ver la verdad." },
-            { nombre: "XIX. El Sol", palo: "mayores", icon: "fa-star", d: "Felicidad pura, éxito, vitalidad, alegría.", i: "Tristeza temporal, ser demasiado pesimista.", nota: "A tu lado todos mis días se llenan de la luz del sol." },
+            { nombre: "XIX. El Sol", palo: "mayores", icon: "fa-star", d: "Felicidad pura, éxito, vitalidad, alegría.", i: "Tristeza temporal, ser demasiado pesimista.", nota: "Tu eres la luz del sol para mi... tenme piedad." },
             { nombre: "XX. El Juicio", palo: "mayores", icon: "fa-star", d: "Renacimiento, perdón, un llamado importante.", i: "Dudas sobre ti, ignorar tu vocación." },
             { nombre: "XXI. El Mundo", palo: "mayores", icon: "fa-star", d: "Ciclo completado con éxito, viaje, totalidad.", i: "Cierre incompleto, retrasos.", nota: "Tú eres mi mundo." },
 
@@ -323,7 +323,7 @@
             { nombre: "7 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Opciones múltiples, ilusiones, soñar despierto.", i: "Aterrizar ideas, tomar decisiones realistas." },
             { nombre: "8 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Dejar atrás lo que ya no sirve, buscar algo más profundo.", i: "Miedo a irse, conformismo." },
             { nombre: "9 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Deseos cumplidos, satisfacción emocional, alegría.", i: "Insatisfacción, orgullo excesivo." },
-            { nombre: "10 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Felicidad familiar, armonía total, amor pleno.", i: "Conflictos familiares, metas irreales.", nota: "Mi meta finalncontigo." },
+            { nombre: "10 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Felicidad familiar, armonía total, amor pleno.", i: "Conflictos familiares, metas irreales.", nota: "Mi meta final contigo." },
             { nombre: "Sota de Copas", palo: "copas", icon: "fa-wine-glass", d: "Mensajes de amor, creatividad, sensibilidad juvenil.", i: "Inmadurez emocional, caprichos." },
             { nombre: "Caballo de Copas", palo: "copas", icon: "fa-wine-glass", d: "Romanticismo, seguir al corazón, encanto.", i: "Falsas promesas, exceso de idealismo." },
             { nombre: "Reina de Copas", palo: "copas", icon: "fa-wine-glass", d: "Compasión, empatía, apoyo emocional, intuición.", i: "Dependencia, dar demasiado de sí misma.", nota: "Lo niegas pero tu corazon es asi..." },
@@ -333,7 +333,7 @@
             { nombre: "As de Bastos", palo: "bastos", icon: "fa-fire", d: "Nueva pasión, inspiración, energía creativa.", i: "Falta de motivación, retrasos." },
             { nombre: "2 de Bastos", palo: "bastos", icon: "fa-fire", d: "Planificación a futuro, tomar decisiones, salir de la zona de confort.", i: "Miedo a lo desconocido, mala planificación." },
             { nombre: "3 de Bastos", palo: "bastos", icon: "fa-fire", d: "Expansión, ver los frutos de tu planificación, mirar lejos.", i: "Frustración por retrasos, pensar en pequeño." },
-            { nombre: "4 de Bastos", palo: "bastos", icon: "fa-fire", d: "Celebración, hogar feliz, estabilidad, armonía.", i: "Problemas en el hogar, inestabilidad pasajera.", nota: "Construir nuestro pequeño refugio es mi sueño." },
+            { nombre: "4 de Bastos", palo: "bastos", icon: "fa-fire", d: "Celebración, hogar feliz, estabilidad, armonía.", i: "Problemas en el hogar, inestabilidad pasajera.", nota: "Construir nuestro pequeño refugio es mi sueño, asi podremos volver a dormir juntos." },
             { nombre: "5 de Bastos", palo: "bastos", icon: "fa-fire", d: "Competencia, conflicto menor, choque de ideas.", i: "Evitar conflictos, buscar acuerdos." },
             { nombre: "6 de Bastos", palo: "bastos", icon: "fa-fire", d: "Éxito, reconocimiento público, victoria.", i: "Caída del pedestal, falta de reconocimiento." },
             { nombre: "7 de Bastos", palo: "bastos", icon: "fa-fire", d: "Defender tus creencias, perseverancia, estar a la defensiva.", i: "Rendirse, agotamiento." },
@@ -354,7 +354,7 @@
             { nombre: "6 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Transición hacia la calma, dejar atrás problemas.", i: "Resistencia a seguir adelante, llevar equipaje emocional." },
             { nombre: "7 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Estrategia, engaño, actuar con sigilo.", i: "Confesar, secretos descubiertos." },
             { nombre: "8 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Sentirse atrapado mentalmente, creencias limitantes.", i: "Liberarse de ataduras mentales, ver la salida." },
-            { nombre: "9 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Ansiedad, preocupaciones excesivas, pesadillas.", i: "Disipar miedos irreales, buscar ayuda.", nota: "El tipo de cosas qeu de sentiralas me desvivire por escucharte..." },
+            { nombre: "9 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Ansiedad, preocupaciones excesivas, pesadillas.", i: "Disipar miedos irreales, buscar ayuda.", nota: "El tipo de cosas que de sentirlas me desvivire por escucharte..." },
             { nombre: "10 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Final doloroso, tocar fondo, victimismo (no hay a dónde ir más que arriba).", i: "Sobrevivir a lo peor, regeneración." },
             { nombre: "Sota de Espadas", palo: "espadas", icon: "fa-khanda", d: "Curiosidad, comunicación rápida, sed de conocimiento.", i: "Chismes, hablar sin pensar." },
             { nombre: "Caballo de Espadas", palo: "espadas", icon: "fa-khanda", d: "Acción mental rápida, ir directo al grano, impulsividad intelectual.", i: "Falta de tacto, precipitarse." },
