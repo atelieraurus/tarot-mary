@@ -19,7 +19,7 @@
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: #fdfbf7; /* Un tono cálido y claro, tipo pergamino suave */
+            background-color: #fdfbf7; 
             color: #2d3748;
         }
 
@@ -34,7 +34,6 @@
         .theme-espadas { color: #718096; border-color: #718096; background-color: #f7fafc; }
         .theme-oros { color: #d69e2e; border-color: #d69e2e; background-color: #fffff0; }
 
-        /* Estilo de tarjeta simple */
         .tarjeta-diccionario {
             background: white;
             border-radius: 12px;
@@ -47,21 +46,22 @@
             box-shadow: 0 10px 15px rgba(0,0,0,0.1);
         }
 
-        /* Flipcard simple */
+        /* Flipcard mejorado para evitar saltos de texto */
         .flip-card {
             perspective: 1000px;
-            cursor: pointer;
             width: 100%;
             max-width: 320px;
-            height: 400px;
+            /* OPTIMIZADO PARA MÓVIL: Altura dinámica (mínimo 350px, ideal 60% de la pantalla, máximo 450px) */
+            height: clamp(350px, 60vh, 450px); 
             margin: 0 auto;
         }
         .flip-card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
             transform-style: preserve-3d;
+            will-change: transform;
         }
         .flip-card.flipped .flip-card-inner {
             transform: rotateY(180deg);
@@ -78,20 +78,25 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1.25rem; /* OPTIMIZADO: Menos padding en móvil para ganar espacio */
             text-align: center;
-        }
-        .flip-card-front {
             background: white;
             border: 2px solid #e2e8f0;
+            box-sizing: border-box; /* Evita desbordamientos */
+        }
+        @media (min-width: 640px) {
+            .flip-card-front, .flip-card-back {
+                padding: 2rem; /* Restaurar padding en pantallas grandes */
+            }
         }
         .flip-card-back {
             transform: rotateY(180deg);
-            background: #fff;
-            border: 2px solid #e2e8f0;
             overflow-y: auto;
             justify-content: flex-start;
             text-align: left;
+            /* scrollbar-gutter evita que el texto se mueva cuando aparece el scroll */
+            scrollbar-gutter: stable; 
+            padding-right: 1.5rem;
         }
 
         .tab-active {
@@ -110,47 +115,39 @@
             margin-top: 1rem;
         }
 
-        /* --- OPCIONES DE ACCESIBILIDAD --- */
-        html {
-            transition: font-size 0.2s ease-in-out;
+        /* Animación para sumar puntos */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); color: #805ad5; }
+            100% { transform: scale(1); }
         }
-        
-        body.dark-mode {
-            background-color: #1a202c !important;
-            color: #e2e8f0 !important;
+        .animate-pop { animation: pop 0.4s ease; }
+
+        @keyframes levelUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
         }
+        .level-up-toast {
+            animation: levelUp 3s ease forwards;
+        }
+
+        html { transition: font-size 0.2s ease-in-out; }
         
+        body.dark-mode { background-color: #1a202c !important; color: #e2e8f0 !important; }
         body.dark-mode header.bg-white { background-color: #2d3748 !important; }
-        
-        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode .font-title {
-            color: #f7fafc !important;
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode .font-title { color: #f7fafc !important; }
+        body.dark-mode p.text-gray-500, body.dark-mode p.text-gray-600 { color: #a0aec0 !important; }
+        body.dark-mode .tarjeta-diccionario, body.dark-mode .flip-card-front, body.dark-mode .flip-card-back, body.dark-mode #menu-a11y {
+            background-color: #2d3748 !important; color: #e2e8f0 !important; border-color: #4a5568 !important;
         }
-        
-        body.dark-mode p.text-gray-500, body.dark-mode p.text-gray-600 {
-            color: #a0aec0 !important;
-        }
-        
-        body.dark-mode .tarjeta-diccionario, 
-        body.dark-mode .flip-card-front, 
-        body.dark-mode .flip-card-back,
-        body.dark-mode #menu-a11y {
-            background-color: #2d3748 !important;
-            color: #e2e8f0 !important;
-            border-color: #4a5568 !important;
-        }
-        
         body.dark-mode .theme-mayores { background-color: rgba(107, 70, 193, 0.15) !important; border-top-color: #9f7aea; }
         body.dark-mode .theme-copas { background-color: rgba(49, 130, 206, 0.15) !important; border-top-color: #63b3ed; }
         body.dark-mode .theme-bastos { background-color: rgba(229, 62, 62, 0.15) !important; border-top-color: #fc8181; }
         body.dark-mode .theme-espadas { background-color: rgba(113, 128, 150, 0.15) !important; border-top-color: #a0aec0; }
         body.dark-mode .theme-oros { background-color: rgba(214, 158, 46, 0.15) !important; border-top-color: #f6e05e; }
-        
-        body.dark-mode input#busqueda {
-            background-color: #1a202c !important;
-            color: #e2e8f0 !important;
-            border-color: #4a5568 !important;
-        }
-        
+        body.dark-mode input#busqueda { background-color: #1a202c !important; color: #e2e8f0 !important; border-color: #4a5568 !important; }
         body.dark-mode .filtro-btn.bg-gray-100 { background-color: #4a5568 !important; color: #e2e8f0 !important; }
         body.dark-mode .filtro-btn.bg-purple-100 { background-color: #805ad5 !important; color: white !important; }
         body.dark-mode .nota-amor { background-color: rgba(237, 100, 166, 0.1) !important; color: #fbb6ce !important; }
@@ -160,17 +157,23 @@
         body.dark-mode .text-gray-600 { color: #cbd5e0 !important; }
         body.dark-mode .tab-active { color: #d6bcfa !important; border-bottom-color: #d6bcfa !important;}
         body.dark-mode nav button:not(.tab-active) { color: #a0aec0 !important; }
-        
         body.dark-mode #menu-a11y button:hover { background-color: #4a5568 !important; }
         body.dark-mode #menu-a11y .bg-gray-50 { background-color: #1a202c !important; border-color: #4a5568 !important; }
         body.dark-mode #menu-a11y .bg-gray-300 { background-color: #4a5568 !important; }
+        
+        /* Stats styles */
+        .stat-box { transition: all 0.3s; }
+        
+        /* OPTIMIZADO PARA MÓVIL: Ocultar barra de scroll en filtros manteniendo funcionalidad */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="antialiased">
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="max-w-5xl mx-auto px-4 py-3 sm:py-4 sm:px-6"> <!-- OPTIMIZADO: Menos padding vertical en móvil -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
                 <div class="text-center md:text-left">
                     <h1 class="text-2xl font-bold text-purple-800 font-title">Tarot para Mary</h1>
                     <p class="text-sm text-gray-500">Amoooooor, mira, para ti, ojala lo uses.</p>
@@ -181,7 +184,7 @@
                         <i class="fa-solid fa-book mr-1"></i> Diccionario
                     </button>
                     <button onclick="switchTab('practica')" id="tab-practica" class="pb-1 px-2 text-gray-600 hover:text-purple-700 transition-colors">
-                        <i class="fa-solid fa-layer-group mr-1"></i> Práctica (Flashcards)
+                        <i class="fa-solid fa-layer-group mr-1"></i> Práctica
                     </button>
 
                     <!-- Botón Accesibilidad -->
@@ -190,7 +193,6 @@
                             <i class="fa-solid fa-universal-access text-xl"></i>
                         </button>
                         
-                        <!-- Menú Accesibilidad -->
                         <div id="menu-a11y" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 p-3 z-50">
                             <p class="text-xs font-bold text-gray-400 uppercase mb-2 border-b pb-1">Accesibilidad</p>
                             
@@ -218,19 +220,19 @@
 
     <main class="max-w-5xl mx-auto px-4 py-8">
 
-        <!-- VISTA 1: DICCIONARIO -->
         <section id="sec-diccionario">
             <div class="mb-6 flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-xl shadow-sm">
                 <input type="text" id="busqueda" placeholder="Buscar carta..." onkeyup="filtrarCartas()" 
                        class="w-full md:w-64 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
                 
-                <div class="flex flex-wrap justify-center gap-2" id="filtros-palo">
-                    <button onclick="setFiltro('todos')" class="filtro-btn px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-sm font-semibold">Todos</button>
-                    <button onclick="setFiltro('mayores')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200">Mayores</button>
-                    <button onclick="setFiltro('copas')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-wine-glass text-blue-500"></i> Copas</button>
-                    <button onclick="setFiltro('bastos')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-fire text-red-500"></i> Bastos</button>
-                    <button onclick="setFiltro('espadas')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-khanda text-gray-500"></i> Espadas</button>
-                    <button onclick="setFiltro('oros')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-coins text-yellow-500"></i> Oros</button>
+                <!-- OPTIMIZADO PARA MÓVIL: Scroll horizontal suave para los filtros en lugar de amontonarlos -->
+                <div class="flex overflow-x-auto hide-scrollbar w-full md:w-auto gap-2 pb-1 snap-x" id="filtros-palo">
+                    <button onclick="setFiltro('todos')" class="filtro-btn px-4 py-1.5 rounded-full bg-purple-100 text-purple-800 text-sm font-semibold flex-shrink-0 snap-center whitespace-nowrap">Todos</button>
+                    <button onclick="setFiltro('mayores')" class="filtro-btn px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 flex-shrink-0 snap-center whitespace-nowrap">Mayores</button>
+                    <button onclick="setFiltro('copas')" class="filtro-btn px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 flex-shrink-0 snap-center whitespace-nowrap"><i class="fa-solid fa-wine-glass text-blue-500 mr-1"></i> Copas</button>
+                    <button onclick="setFiltro('bastos')" class="filtro-btn px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 flex-shrink-0 snap-center whitespace-nowrap"><i class="fa-solid fa-fire text-red-500 mr-1"></i> Bastos</button>
+                    <button onclick="setFiltro('espadas')" class="filtro-btn px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 flex-shrink-0 snap-center whitespace-nowrap"><i class="fa-solid fa-khanda text-gray-500 mr-1"></i> Espadas</button>
+                    <button onclick="setFiltro('oros')" class="filtro-btn px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 flex-shrink-0 snap-center whitespace-nowrap"><i class="fa-solid fa-coins text-yellow-500 mr-1"></i> Oros</button>
                 </div>
             </div>
 
@@ -239,35 +241,61 @@
             </div>
         </section>
 
-        <!-- VISTA 2: PRÁCTICA -->
         <section id="sec-practica" class="hidden">
-            <div class="text-center mb-6">
+            
+            <!-- Barra de progreso / Gamificación OPTIMIZADA PARA MÓVIL -->
+            <div class="max-w-md mx-auto mb-4 sm:mb-6 bg-white rounded-xl shadow-sm border border-purple-100 p-3 sm:p-4 flex justify-between items-center stat-box">
+                <div class="text-center flex-1">
+                    <p class="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider">Nivel</p>
+                    <p id="ui-nivel" class="font-title text-purple-700 font-bold text-sm sm:text-base truncate px-1">Iniciada</p>
+                </div>
+                <div class="w-px h-6 sm:h-8 bg-gray-200"></div>
+                <div class="text-center flex-1">
+                    <p class="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider">Puntos</p>
+                    <p id="ui-puntos" class="font-title text-gray-800 font-bold text-base sm:text-lg">0</p>
+                </div>
+                <div class="w-px h-6 sm:h-8 bg-gray-200"></div>
+                <div class="text-center flex-1">
+                    <p class="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider">Racha <i class="fa-solid fa-fire text-orange-500"></i></p>
+                    <p id="ui-racha" class="font-title text-orange-600 font-bold text-base sm:text-lg">0</p>
+                </div>
+            </div>
+
+            <div class="text-center mb-4 sm:mb-6">
                 <h2 class="text-xl font-title text-purple-800">Ponte a prueba mi amor</h2>
                 <p class="text-gray-600 text-sm">Piensa el significado y toca la carta para ver si acertaste, sin trampas, rogaria.</p>
             </div>
 
-            <div class="flip-card mb-8" id="flashcard" onclick="voltearCarta()">
+            <!-- Toast de Subida de Nivel (Oculto por defecto) -->
+            <div id="toast-nivel" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg z-50 flex items-center gap-2">
+                <i class="fa-solid fa-star text-yellow-300"></i>
+                <span id="toast-text" class="font-bold">¡Nuevo Nivel Alcanzado!</span>
+                <i class="fa-solid fa-star text-yellow-300"></i>
+            </div>
+
+            <!-- Flashcard -->
+            <div class="flip-card mb-8 cursor-pointer" id="flashcard" onclick="voltearCarta()">
                 <div class="flip-card-inner">
                     <!-- Frente (Pregunta) -->
                     <div class="flip-card-front">
                         <div id="fc-icono" class="text-5xl mb-4"></div>
                         <p id="fc-palo" class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2"></p>
                         <h3 id="fc-nombre" class="text-2xl font-title text-gray-800 font-bold mb-4">Nombre</h3>
-                        <p class="text-sm text-purple-500 animate-pulse mt-4">Toca para revelar</p>
+                        <p class="text-sm text-purple-500 animate-pulse mt-4"><i class="fa-solid fa-hand-pointer mr-1"></i> Toca para revelar</p>
                     </div>
                     
                     <!-- Dorso (Respuesta) -->
-                    <div class="flip-card-back p-6 custom-scrollbar">
+                    <div class="flip-card-back">
                         <h3 id="fc-resp-nombre" class="text-xl font-title font-bold text-gray-800 mb-4 border-b pb-2">Nombre</h3>
                         
                         <div class="mb-3">
                             <span class="text-xs font-bold text-green-600 uppercase">Derecho:</span>
-                            <p id="fc-derecho" class="text-gray-700 text-sm mt-1"></p>
+                            <p id="fc-derecho" class="text-gray-700 text-sm mt-1 leading-relaxed"></p>
                         </div>
                         
                         <div class="mb-3">
                             <span class="text-xs font-bold text-red-600 uppercase">Invertido:</span>
-                            <p id="fc-invertido" class="text-gray-700 text-sm mt-1"></p>
+                            <p id="fc-invertido" class="text-gray-700 text-sm mt-1 leading-relaxed"></p>
                         </div>
 
                         <div id="fc-nota-container" class="nota-amor hidden">
@@ -277,19 +305,31 @@
                 </div>
             </div>
 
-            <div class="text-center">
-                <button onclick="siguienteFlashcard()" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-bold shadow-md transition-transform transform hover:scale-105">
-                    Siguiente Carta <i class="fa-solid fa-arrow-right ml-2"></i>
-                </button>
+            <!-- Controles de Respuesta -->
+            <div class="text-center max-w-sm mx-auto h-20 sm:h-16 flex flex-col justify-center">
+                <!-- Estado 1: Antes de voltear -->
+                <div id="controles-pre">
+                    <p class="text-sm text-gray-500 italic px-4">Toca la carta cuando tengas la respuesta en mente.</p>
+                </div>
+                
+                <!-- Estado 2: Después de voltear (Botones de evaluación) -->
+                <div id="controles-post" class="hidden flex gap-3 sm:gap-4 justify-center px-4">
+                    <button onclick="evaluar(false)" class="flex-1 bg-white border-2 border-red-200 text-red-600 hover:bg-red-50 py-3 rounded-xl font-bold transition-colors shadow-sm active:scale-95">
+                        <i class="fa-solid fa-xmark mr-1"></i> Fallé
+                    </button>
+                    <button onclick="evaluar(true)" class="flex-1 bg-green-500 hover:bg-green-600 text-white shadow-md shadow-green-200 py-3 rounded-xl font-bold transition-transform transform hover:scale-105 active:scale-95">
+                        <i class="fa-solid fa-check mr-1"></i> ¡Lo sabía!
+                    </button>
+                </div>
             </div>
         </section>
 
     </main>
 
     <script>
-        // Base de datos simplificada para fácil aprendizaje
+        // --- BASE DE DATOS MANTENIENDO LOS TEXTOS DE MARY ---
         const cartas = [
-            // --- ARCANOS MAYORES ---
+            // Arcanos Mayores
             { nombre: "0. El Loco", palo: "mayores", icon: "fa-star", d: "Nuevos inicios, espontaneidad, dar un salto de fe.", i: "Imprudencia, miedo a arriesgarse.", nota: "Mil veces empezar desde cero, y ojala que todas esas estando juntos" },
             { nombre: "I. El Mago", palo: "mayores", icon: "fa-star", d: "Poder de manifestación, tienes las herramientas necesarias, acción.", i: "Potencial desperdiciado, engaños.", nota: "Tienes todo el poder dentro de ti, eres magia para mi." },
             { nombre: "II. La Sacerdotisa", palo: "mayores", icon: "fa-star", d: "Intuición, misterio, escuchar tu voz interior.", i: "Ignorar tus instintos, secretos ocultos.", nota: "Confía en lo que sientes, que tu corazón siente todo tan perfecto." },
@@ -313,7 +353,7 @@
             { nombre: "XX. El Juicio", palo: "mayores", icon: "fa-star", d: "Renacimiento, perdón, un llamado importante.", i: "Dudas sobre ti, ignorar tu vocación." },
             { nombre: "XXI. El Mundo", palo: "mayores", icon: "fa-star", d: "Ciclo completado con éxito, viaje, totalidad.", i: "Cierre incompleto, retrasos.", nota: "Tú eres mi mundo." },
 
-            // --- COPAS (Emociones, Amor, Relaciones) ---
+            // Copas
             { nombre: "As de Copas", palo: "copas", icon: "fa-wine-glass", d: "Nuevas emociones, amor naciente, intuición pura.", i: "Bloqueo emocional, emociones reprimidas." },
             { nombre: "2 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Alianza, romance, atracción mutua, conexión profunda.", i: "Desconexión, problemas de pareja.", nota: "Esta carta somos tú y yo." },
             { nombre: "3 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Celebración, amistad, comunidad, alegría.", i: "Aislamiento, excesos en fiestas." },
@@ -329,7 +369,7 @@
             { nombre: "Reina de Copas", palo: "copas", icon: "fa-wine-glass", d: "Compasión, empatía, apoyo emocional, intuición.", i: "Dependencia, dar demasiado de sí misma.", nota: "Lo niegas pero tu corazon es asi..." },
             { nombre: "Rey de Copas", palo: "copas", icon: "fa-wine-glass", d: "Equilibrio emocional, madurez afectiva, diplomacia.", i: "Manipulación emocional, frialdad." },
 
-            // --- BASTOS (Acción, Energía, Pasión) ---
+            // Bastos
             { nombre: "As de Bastos", palo: "bastos", icon: "fa-fire", d: "Nueva pasión, inspiración, energía creativa.", i: "Falta de motivación, retrasos." },
             { nombre: "2 de Bastos", palo: "bastos", icon: "fa-fire", d: "Planificación a futuro, tomar decisiones, salir de la zona de confort.", i: "Miedo a lo desconocido, mala planificación." },
             { nombre: "3 de Bastos", palo: "bastos", icon: "fa-fire", d: "Expansión, ver los frutos de tu planificación, mirar lejos.", i: "Frustración por retrasos, pensar en pequeño." },
@@ -345,7 +385,7 @@
             { nombre: "Reina de Bastos", palo: "bastos", icon: "fa-fire", d: "Confianza, carisma, independencia, valentía.", i: "Exigencia excesiva, inseguridad oculta.", nota: "Me encanta tu confianza amor mio, eres imparable." },
             { nombre: "Rey de Bastos", palo: "bastos", icon: "fa-fire", d: "Liderazgo inspirador, visión emprendedora.", i: "Dictatorial, prometer más de lo que puede cumplir." },
 
-            // --- ESPADAS (Mente, Intelecto, Conflictos) ---
+            // Espadas
             { nombre: "As de Espadas", palo: "espadas", icon: "fa-khanda", d: "Claridad mental, la verdad, ideas brillantes.", i: "Confusión, hostilidad." },
             { nombre: "2 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Evitar una decisión, estancamiento, negación.", i: "Tomar una decisión difícil." },
             { nombre: "3 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Dolor emocional, dolor necesario, desilusión.", i: "Sanación, superar el dolor." },
@@ -361,7 +401,7 @@
             { nombre: "Reina de Espadas", palo: "espadas", icon: "fa-khanda", d: "Claridad, honestidad, independencia intelectual, objetividad.", i: "Frialdad, excesiva crítica." },
             { nombre: "Rey de Espadas", palo: "espadas", icon: "fa-khanda", d: "Lógica, autoridad mental, justicia estricta.", i: "Crueldad mental, tiranía." },
 
-            // --- OROS (Dinero, Trabajo, Salud, Materia) ---
+            // Oros
             { nombre: "As de Oros", palo: "oros", icon: "fa-coins", d: "Nueva oportunidad financiera, prosperidad, inicio sólido.", i: "Oportunidad perdida, retrasos financieros." },
             { nombre: "2 de Oros", palo: "oros", icon: "fa-coins", d: "Malabarismos, equilibrio financiero, adaptabilidad.", i: "Desequilibrio, tomar demasiadas tareas." },
             { nombre: "3 de Oros", palo: "oros", icon: "fa-coins", d: "Trabajo en equipo, colaboración, maestría.", i: "Falta de coordinación, ignorar consejos." },
@@ -380,6 +420,21 @@
 
         let filtroActual = 'todos';
 
+        // --- SISTEMA DE PUNTUACIÓN Y GAMIFICACIÓN ---
+        let puntos = 0;
+        let racha = 0;
+        let nivelActual = 0;
+        let cartaActual = null;
+        let volteada = false;
+
+        const niveles = [
+            { pts: 0, titulo: "Iniciada", color: "text-purple-700" },
+            { pts: 50, titulo: "Mi Brujita", color: "text-blue-600" },
+            { pts: 150, titulo: "Lectora de mi Corazón", color: "text-pink-600" },
+            { pts: 300, titulo: "La Mejor", color: "text-orange-600" },
+            { pts: 500, titulo: "Mi Diosa", color: "text-yellow-600" }
+        ];
+
         // --- ACCESIBILIDAD ---
         let currentZoom = 100;
 
@@ -397,13 +452,12 @@
                 currentZoom = 100;
             } else {
                 currentZoom += step * 10;
-                if (currentZoom < 80) currentZoom = 80; // Mínimo 80%
-                if (currentZoom > 150) currentZoom = 150; // Máximo 150%
+                if (currentZoom < 80) currentZoom = 80;
+                if (currentZoom > 150) currentZoom = 150;
             }
             document.documentElement.style.fontSize = currentZoom + '%';
         }
 
-        // Cierra el menú si se hace clic afuera
         document.addEventListener('click', function(event) {
             const menu = document.getElementById('menu-a11y');
             if (menu && !menu.classList.contains('hidden') && !event.target.closest('.relative')) {
@@ -417,7 +471,6 @@
             prepararNuevaFlashcard();
         };
 
-        // Cambio de pestañas
         function switchTab(tab) {
             document.getElementById('sec-diccionario').classList.add('hidden');
             document.getElementById('sec-practica').classList.add('hidden');
@@ -429,7 +482,6 @@
             document.getElementById(`tab-${tab}`).className = 'tab-active pb-1 px-2 transition-colors';
         }
 
-        // Renderizar diccionario
         function renderizarDiccionario(busqueda = '') {
             const grid = document.getElementById('grid-cartas');
             grid.innerHTML = '';
@@ -471,33 +523,110 @@
 
         function setFiltro(palo) {
             filtroActual = palo;
-            
-            // Actualizar botones visualmente
             document.querySelectorAll('.filtro-btn').forEach(btn => {
                 btn.classList.remove('bg-purple-100', 'text-purple-800', 'font-semibold');
                 btn.classList.add('bg-gray-100', 'text-gray-600');
             });
             event.currentTarget.classList.remove('bg-gray-100', 'text-gray-600');
             event.currentTarget.classList.add('bg-purple-100', 'text-purple-800', 'font-semibold');
-            
             filtrarCartas();
         }
 
-        let cartaActual = null;
-        let volteada = false;
-
+        // --- LÓGICA DE JUEGO FLASHCARD ---
         function voltearCarta() {
+            if (volteada) return; // Si ya está volteada, no hace nada (obliga a usar los botones)
+            
             const fc = document.getElementById('flashcard');
-            volteada = !volteada;
-            if(volteada) {
-                fc.classList.add('flipped');
+            volteada = true;
+            fc.classList.add('flipped');
+            
+            // Cambiar controles
+            document.getElementById('controles-pre').classList.add('hidden');
+            document.getElementById('controles-post').classList.remove('hidden');
+        }
+
+        function evaluar(loSabia) {
+            const elPuntos = document.getElementById('ui-puntos');
+            const elRacha = document.getElementById('ui-racha');
+
+            if (loSabia) {
+                // Sumar puntos
+                let puntosGanados = 10;
+                if (racha >= 3) puntosGanados += 5; // Bonus por racha
+                
+                puntos += puntosGanados;
+                racha += 1;
+                
+                // Efecto visual
+                elPuntos.classList.remove('animate-pop');
+                void elPuntos.offsetWidth; // reset animacion
+                elPuntos.classList.add('animate-pop');
+                
             } else {
-                fc.classList.remove('flipped');
+                racha = 0; // Pierde racha
+            }
+
+            // Actualizar UI
+            elPuntos.innerText = puntos;
+            elRacha.innerText = racha;
+            
+            revisarNivel();
+            
+            // Siguiente carta con pequeño retraso para animacion
+            const fc = document.getElementById('flashcard');
+            volteada = false;
+            fc.classList.remove('flipped');
+            
+            // Ocultar botones, volver a mostrar texto de instrucción
+            document.getElementById('controles-post').classList.add('hidden');
+            document.getElementById('controles-pre').classList.remove('hidden');
+
+            setTimeout(() => {
+                prepararNuevaFlashcard();
+                // OPTIMIZADO PARA MÓVIL: Pequeño scroll suave para centrar la tarjeta si estamos en un celular
+                if(window.innerWidth < 768) {
+                    document.getElementById('sec-practica').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 400); 
+        }
+
+        function revisarNivel() {
+            let nuevoNivel = 0;
+            for (let i = niveles.length - 1; i >= 0; i--) {
+                if (puntos >= niveles[i].pts) {
+                    nuevoNivel = i;
+                    break;
+                }
+            }
+
+            if (nuevoNivel > nivelActual) {
+                nivelActual = nuevoNivel;
+                const uiNivel = document.getElementById('ui-nivel');
+                uiNivel.innerText = niveles[nivelActual].titulo;
+                
+                // Limpiar clases de color y poner la nueva
+                uiNivel.className = `font-title font-bold ${niveles[nivelActual].color}`;
+
+                // Mostrar Toast
+                const toast = document.getElementById('toast-nivel');
+                document.getElementById('toast-text').innerText = `¡Alcanzaste: ${niveles[nivelActual].titulo}!`;
+                
+                toast.classList.remove('hidden');
+                toast.classList.remove('level-up-toast');
+                void toast.offsetWidth; // trigger reflow
+                toast.classList.add('level-up-toast');
+                
+                setTimeout(() => { toast.classList.add('hidden'); }, 3000);
             }
         }
 
         function prepararNuevaFlashcard() {
-            const index = Math.floor(Math.random() * cartas.length);
+            // Seleccionar carta que no sea la misma que la anterior
+            let index;
+            do {
+                index = Math.floor(Math.random() * cartas.length);
+            } while (cartaActual && index === cartas.indexOf(cartaActual) && cartas.length > 1);
+            
             cartaActual = cartas[index];
 
             // Colores por palo
@@ -523,15 +652,6 @@
                 notaCont.classList.remove('hidden');
             } else {
                 notaCont.classList.add('hidden');
-            }
-        }
-
-        function siguienteFlashcard() {
-            if(volteada) {
-                voltearCarta();
-                setTimeout(prepararNuevaFlashcard, 400); // Esperar que termine de girar
-            } else {
-                prepararNuevaFlashcard();
             }
         }
     </script>
