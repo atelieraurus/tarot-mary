@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Tarot de Mary - Aprendizaje Simplificado</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fdfbf7; /* Un tono cálido y claro, tipo pergamino suave */
+            color: #2d3748;
+        }
+
+        h1, h2, h3, .font-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Colores por palo */
+        .theme-mayores { color: #6b46c1; border-color: #6b46c1; background-color: #faf5ff; }
+        .theme-copas { color: #3182ce; border-color: #3182ce; background-color: #ebf8ff; }
+        .theme-bastos { color: #e53e3e; border-color: #e53e3e; background-color: #fff5f5; }
+        .theme-espadas { color: #718096; border-color: #718096; background-color: #f7fafc; }
+        .theme-oros { color: #d69e2e; border-color: #d69e2e; background-color: #fffff0; }
+
+        /* Estilo de tarjeta simple */
+        .tarjeta-diccionario {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 4px solid #ccc;
+        }
+        .tarjeta-diccionario:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Flipcard simple */
+        .flip-card {
+            perspective: 1000px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            height: 400px;
+            margin: 0 auto;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        .flip-card-front {
+            background: white;
+            border: 2px solid #e2e8f0;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            overflow-y: auto;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #6b46c1;
+            color: #6b46c1;
+            font-weight: bold;
+        }
+
+        .nota-amor {
+            background-color: #fff0f6;
+            border-left: 3px solid #f687b3;
+            color: #b83280;
+            padding: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* --- OPCIONES DE ACCESIBILIDAD --- */
+        html {
+            transition: font-size 0.2s ease-in-out;
+        }
+        
+        body.dark-mode {
+            background-color: #1a202c !important;
+            color: #e2e8f0 !important;
+        }
+        
+        body.dark-mode header.bg-white { background-color: #2d3748 !important; }
+        
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode .font-title {
+            color: #f7fafc !important;
+        }
+        
+        body.dark-mode p.text-gray-500, body.dark-mode p.text-gray-600 {
+            color: #a0aec0 !important;
+        }
+        
+        body.dark-mode .tarjeta-diccionario, 
+        body.dark-mode .flip-card-front, 
+        body.dark-mode .flip-card-back,
+        body.dark-mode #menu-a11y {
+            background-color: #2d3748 !important;
+            color: #e2e8f0 !important;
+            border-color: #4a5568 !important;
+        }
+        
+        body.dark-mode .theme-mayores { background-color: rgba(107, 70, 193, 0.15) !important; border-top-color: #9f7aea; }
+        body.dark-mode .theme-copas { background-color: rgba(49, 130, 206, 0.15) !important; border-top-color: #63b3ed; }
+        body.dark-mode .theme-bastos { background-color: rgba(229, 62, 62, 0.15) !important; border-top-color: #fc8181; }
+        body.dark-mode .theme-espadas { background-color: rgba(113, 128, 150, 0.15) !important; border-top-color: #a0aec0; }
+        body.dark-mode .theme-oros { background-color: rgba(214, 158, 46, 0.15) !important; border-top-color: #f6e05e; }
+        
+        body.dark-mode input#busqueda {
+            background-color: #1a202c !important;
+            color: #e2e8f0 !important;
+            border-color: #4a5568 !important;
+        }
+        
+        body.dark-mode .filtro-btn.bg-gray-100 { background-color: #4a5568 !important; color: #e2e8f0 !important; }
+        body.dark-mode .filtro-btn.bg-purple-100 { background-color: #805ad5 !important; color: white !important; }
+        body.dark-mode .nota-amor { background-color: rgba(237, 100, 166, 0.1) !important; color: #fbb6ce !important; }
+        body.dark-mode .bg-white { background-color: #2d3748 !important; }
+        body.dark-mode .text-gray-800 { color: #f7fafc !important; }
+        body.dark-mode .text-gray-700 { color: #e2e8f0 !important; }
+        body.dark-mode .text-gray-600 { color: #cbd5e0 !important; }
+        body.dark-mode .tab-active { color: #d6bcfa !important; border-bottom-color: #d6bcfa !important;}
+        body.dark-mode nav button:not(.tab-active) { color: #a0aec0 !important; }
+        
+        body.dark-mode #menu-a11y button:hover { background-color: #4a5568 !important; }
+        body.dark-mode #menu-a11y .bg-gray-50 { background-color: #1a202c !important; border-color: #4a5568 !important; }
+        body.dark-mode #menu-a11y .bg-gray-300 { background-color: #4a5568 !important; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <h1 class="text-2xl font-bold text-purple-800 font-title">El Tarot de Mary</h1>
+                    <p class="text-sm text-gray-500">Aprende paso a paso, sin prisa.</p>
+                </div>
+                
+                <nav class="flex space-x-4 items-center">
+                    <button onclick="switchTab('diccionario')" id="tab-diccionario" class="tab-active pb-1 px-2 text-gray-600 hover:text-purple-700 transition-colors">
+                        <i class="fa-solid fa-book mr-1"></i> Diccionario
+                    </button>
+                    <button onclick="switchTab('practica')" id="tab-practica" class="pb-1 px-2 text-gray-600 hover:text-purple-700 transition-colors">
+                        <i class="fa-solid fa-layer-group mr-1"></i> Práctica (Flashcards)
+                    </button>
+
+                    <!-- Botón Accesibilidad -->
+                    <div class="relative ml-2">
+                        <button onclick="toggleA11y(event)" class="text-gray-500 hover:text-purple-700 transition-colors p-2 rounded-full hover:bg-gray-100" title="Opciones de Accesibilidad">
+                            <i class="fa-solid fa-universal-access text-xl"></i>
+                        </button>
+                        
+                        <!-- Menú Accesibilidad -->
+                        <div id="menu-a11y" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 p-3 z-50">
+                            <p class="text-xs font-bold text-gray-400 uppercase mb-2 border-b pb-1">Accesibilidad</p>
+                            
+                            <button onclick="toggleDarkMode()" class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 rounded-lg flex items-center justify-between transition-colors mb-2">
+                                <span>Modo Oscuro</span>
+                                <i class="fa-solid fa-moon"></i>
+                            </button>
+                            
+                            <div class="px-3 py-2 text-sm text-gray-700 flex flex-col gap-2">
+                                <span class="font-semibold">Tamaño de letra:</span>
+                                <div class="flex justify-between items-center bg-gray-50 rounded-lg p-1 border">
+                                    <button onclick="changeFontSize(-1)" class="flex-1 hover:bg-gray-200 py-1 rounded text-lg font-bold" title="Reducir">A-</button>
+                                    <div class="w-px h-4 bg-gray-300 mx-1"></div>
+                                    <button onclick="changeFontSize(0)" class="flex-1 hover:bg-gray-200 py-1 rounded" title="Restaurar"><i class="fa-solid fa-rotate-right"></i></button>
+                                    <div class="w-px h-4 bg-gray-300 mx-1"></div>
+                                    <button onclick="changeFontSize(1)" class="flex-1 hover:bg-gray-200 py-1 rounded text-lg font-bold" title="Aumentar">A+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+
+        <!-- VISTA 1: DICCIONARIO -->
+        <section id="sec-diccionario">
+            <div class="mb-6 flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-xl shadow-sm">
+                <input type="text" id="busqueda" placeholder="Buscar carta..." onkeyup="filtrarCartas()" 
+                       class="w-full md:w-64 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                
+                <div class="flex flex-wrap justify-center gap-2" id="filtros-palo">
+                    <button onclick="setFiltro('todos')" class="filtro-btn px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-sm font-semibold">Todos</button>
+                    <button onclick="setFiltro('mayores')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200">Mayores</button>
+                    <button onclick="setFiltro('copas')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-wine-glass text-blue-500"></i> Copas</button>
+                    <button onclick="setFiltro('bastos')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-fire text-red-500"></i> Bastos</button>
+                    <button onclick="setFiltro('espadas')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-khanda text-gray-500"></i> Espadas</button>
+                    <button onclick="setFiltro('oros')" class="filtro-btn px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200"><i class="fa-solid fa-coins text-yellow-500"></i> Oros</button>
+                </div>
+            </div>
+
+            <div id="grid-cartas" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Las cartas se inyectan por JS -->
+            </div>
+        </section>
+
+        <!-- VISTA 2: PRÁCTICA -->
+        <section id="sec-practica" class="hidden">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-title text-purple-800">Ponte a prueba, Mary</h2>
+                <p class="text-gray-600 text-sm">Piensa el significado y toca la carta para ver si acertaste.</p>
+            </div>
+
+            <div class="flip-card mb-8" id="flashcard" onclick="voltearCarta()">
+                <div class="flip-card-inner">
+                    <!-- Frente (Pregunta) -->
+                    <div class="flip-card-front">
+                        <div id="fc-icono" class="text-5xl mb-4"></div>
+                        <p id="fc-palo" class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2"></p>
+                        <h3 id="fc-nombre" class="text-2xl font-title text-gray-800 font-bold mb-4">Nombre</h3>
+                        <p class="text-sm text-purple-500 animate-pulse mt-4">Toca para revelar</p>
+                    </div>
+                    
+                    <!-- Dorso (Respuesta) -->
+                    <div class="flip-card-back p-6 custom-scrollbar">
+                        <h3 id="fc-resp-nombre" class="text-xl font-title font-bold text-gray-800 mb-4 border-b pb-2">Nombre</h3>
+                        
+                        <div class="mb-3">
+                            <span class="text-xs font-bold text-green-600 uppercase">Derecho:</span>
+                            <p id="fc-derecho" class="text-gray-700 text-sm mt-1"></p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <span class="text-xs font-bold text-red-600 uppercase">Invertido:</span>
+                            <p id="fc-invertido" class="text-gray-700 text-sm mt-1"></p>
+                        </div>
+
+                        <div id="fc-nota-container" class="nota-amor hidden">
+                            <i class="fa-solid fa-heart"></i> <span id="fc-nota"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="siguienteFlashcard()" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-bold shadow-md transition-transform transform hover:scale-105">
+                    Siguiente Carta <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Base de datos simplificada para fácil aprendizaje
+        const cartas = [
+            // --- ARCANOS MAYORES ---
+            { nombre: "0. El Loco", palo: "mayores", icon: "fa-star", d: "Nuevos inicios, espontaneidad, dar un salto de fe.", i: "Imprudencia, miedo a arriesgarse.", nota: "A veces hay que dar el salto, mi amor. Yo siempre estaré para atraparte." },
+            { nombre: "I. El Mago", palo: "mayores", icon: "fa-star", d: "Poder de manifestación, tienes las herramientas necesarias, acción.", i: "Potencial desperdiciado, engaños.", nota: "Tienes todo el poder dentro de ti, eres magia para mi." },
+            { nombre: "II. La Sacerdotisa", palo: "mayores", icon: "fa-star", d: "Intuición, misterio, escuchar tu voz interior.", i: "Ignorar tus instintos, secretos ocultos.", nota: "Confía en lo que sientes, que tu corazón siente todo tan perfecto." },
+            { nombre: "III. La Emperatriz", palo: "mayores", icon: "fa-star", d: "Abundancia, feminidad, creatividad, nutrición emocional.", i: "Dependencia, bloqueo creativo, descuido personal.", nota: "Eres eso para mi, hermosa, fuerte, llena de luz, un poquito enojona ;D." },
+            { nombre: "IV. El Emperador", palo: "mayores", icon: "fa-star", d: "Estructura, autoridad, liderazgo, estabilidad.", i: "Rigidez, exceso de control, falta de disciplina." },
+            { nombre: "V. El Hierofante", palo: "mayores", icon: "fa-star", d: "Tradición, aprendizaje, creencias compartidas.", i: "Rebeldía, romper las normas establecidas." },
+            { nombre: "VI. Los Enamorados", palo: "mayores", icon: "fa-star", d: "Amor, valores compartidos, decisiones importantes.", i: "Desarmonía, malas decisiones relacionales.", nota: "Tú y yo, siempre. Eres la mejor decisión de mi vida." },
+            { nombre: "VII. El Carro", palo: "mayores", icon: "fa-star", d: "Determinación, voluntad, avanzar hacia el éxito.", i: "Pérdida de control, obstáculos, falta de dirección." },
+            { nombre: "VIII. La Fuerza", palo: "mayores", icon: "fa-star", d: "Coraje, compasión, dominar emociones con amor.", i: "Inseguridad, debilidad emocional.", nota: "Admiro tu fuerza más de lo que imaginas." },
+            { nombre: "IX. El Ermitaño", palo: "mayores", icon: "fa-star", d: "Búsqueda interior, soledad voluntaria, sabiduría.", i: "Aislamiento excesivo, soledad no deseada." },
+            { nombre: "X. La Rueda de la Fortuna", palo: "mayores", icon: "fa-star", d: "Cambios positivos, el destino, ciclos de la vida.", i: "Mala racha temporal, resistencia al cambio." },
+            { nombre: "XI. La Justicia", palo: "mayores", icon: "fa-star", d: "Equidad, verdad, causa y efecto, balance.", i: "Injusticia, evadir responsabilidades." },
+            { nombre: "XII. El Colgado", palo: "mayores", icon: "fa-star", d: "Pausa, ver las cosas desde otra perspectiva, soltar.", i: "Estancamiento, sacrificio inútil." },
+            { nombre: "XIII. La Muerte", palo: "mayores", icon: "fa-star", d: "Transformación, finales necesarios para nuevos comienzos.", i: "Miedo al cambio, no dejar ir el pasado." },
+            { nombre: "XIV. La Templanza", palo: "mayores", icon: "fa-star", d: "Equilibrio, paciencia, paz interior.", i: "Excesos, impaciencia, falta de armonía.", nota: "Tómate tu tiempo, amor, no hay prisa, que yo te espero." },
+            { nombre: "XV. El Diablo", palo: "mayores", icon: "fa-star", d: "Apegos, adicciones, sentirse atrapado, materialismo.", i: "Liberación, soltar cadenas." },
+            { nombre: "XVI. La Torre", palo: "mayores", icon: "fa-star", d: "Cambio repentino, caos que destruye lo falso.", i: "Evitar el desastre, miedo a la verdad." },
+            { nombre: "XVII. La Estrella", palo: "mayores", icon: "fa-star", d: "Esperanza, sanación, inspiración, fe.", i: "Desesperanza, falta de fe.", nota: "Tú eres mi estrella, guiame que te seguire." },
+            { nombre: "XVIII. La Luna", palo: "mayores", icon: "fa-star", d: "Ilusiones, miedos subconscientes, confusión.", i: "Superar ansiedades, ver la verdad." },
+            { nombre: "XIX. El Sol", palo: "mayores", icon: "fa-star", d: "Felicidad pura, éxito, vitalidad, alegría.", i: "Tristeza temporal, ser demasiado pesimista.", nota: "A tu lado todos mis días se llenan de la luz del sol." },
+            { nombre: "XX. El Juicio", palo: "mayores", icon: "fa-star", d: "Renacimiento, perdón, un llamado importante.", i: "Dudas sobre ti, ignorar tu vocación." },
+            { nombre: "XXI. El Mundo", palo: "mayores", icon: "fa-star", d: "Ciclo completado con éxito, viaje, totalidad.", i: "Cierre incompleto, retrasos.", nota: "Tú eres mi mundo." },
+
+            // --- COPAS (Emociones, Amor, Relaciones) ---
+            { nombre: "As de Copas", palo: "copas", icon: "fa-wine-glass", d: "Nuevas emociones, amor naciente, intuición pura.", i: "Bloqueo emocional, emociones reprimidas." },
+            { nombre: "2 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Alianza, romance, atracción mutua, conexión profunda.", i: "Desconexión, problemas de pareja.", nota: "Esta carta somos tú y yo." },
+            { nombre: "3 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Celebración, amistad, comunidad, alegría.", i: "Aislamiento, excesos en fiestas." },
+            { nombre: "4 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Apatía, aburrimiento, ignorar oportunidades afectivas.", i: "Salir de la rutina, abrirse a lo nuevo." },
+            { nombre: "5 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Tristeza, enfocarse en lo perdido, decepción.", i: "Aceptación, ver lo positivo que aún queda." },
+            { nombre: "6 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Nostalgia, recuerdos de infancia, inocencia.", i: "Vivir demasiado en el pasado." },
+            { nombre: "7 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Opciones múltiples, ilusiones, soñar despierto.", i: "Aterrizar ideas, tomar decisiones realistas." },
+            { nombre: "8 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Dejar atrás lo que ya no sirve, buscar algo más profundo.", i: "Miedo a irse, conformismo." },
+            { nombre: "9 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Deseos cumplidos, satisfacción emocional, alegría.", i: "Insatisfacción, orgullo excesivo." },
+            { nombre: "10 de Copas", palo: "copas", icon: "fa-wine-glass", d: "Felicidad familiar, armonía total, amor pleno.", i: "Conflictos familiares, metas irreales.", nota: "Mi meta finalncontigo." },
+            { nombre: "Sota de Copas", palo: "copas", icon: "fa-wine-glass", d: "Mensajes de amor, creatividad, sensibilidad juvenil.", i: "Inmadurez emocional, caprichos." },
+            { nombre: "Caballo de Copas", palo: "copas", icon: "fa-wine-glass", d: "Romanticismo, seguir al corazón, encanto.", i: "Falsas promesas, exceso de idealismo." },
+            { nombre: "Reina de Copas", palo: "copas", icon: "fa-wine-glass", d: "Compasión, empatía, apoyo emocional, intuición.", i: "Dependencia, dar demasiado de sí misma.", nota: "Lo niegas pero tu corazon es asi..." },
+            { nombre: "Rey de Copas", palo: "copas", icon: "fa-wine-glass", d: "Equilibrio emocional, madurez afectiva, diplomacia.", i: "Manipulación emocional, frialdad." },
+
+            // --- BASTOS (Acción, Energía, Pasión) ---
+            { nombre: "As de Bastos", palo: "bastos", icon: "fa-fire", d: "Nueva pasión, inspiración, energía creativa.", i: "Falta de motivación, retrasos." },
+            { nombre: "2 de Bastos", palo: "bastos", icon: "fa-fire", d: "Planificación a futuro, tomar decisiones, salir de la zona de confort.", i: "Miedo a lo desconocido, mala planificación." },
+            { nombre: "3 de Bastos", palo: "bastos", icon: "fa-fire", d: "Expansión, ver los frutos de tu planificación, mirar lejos.", i: "Frustración por retrasos, pensar en pequeño." },
+            { nombre: "4 de Bastos", palo: "bastos", icon: "fa-fire", d: "Celebración, hogar feliz, estabilidad, armonía.", i: "Problemas en el hogar, inestabilidad pasajera.", nota: "Construir nuestro pequeño refugio es mi sueño." },
+            { nombre: "5 de Bastos", palo: "bastos", icon: "fa-fire", d: "Competencia, conflicto menor, choque de ideas.", i: "Evitar conflictos, buscar acuerdos." },
+            { nombre: "6 de Bastos", palo: "bastos", icon: "fa-fire", d: "Éxito, reconocimiento público, victoria.", i: "Caída del pedestal, falta de reconocimiento." },
+            { nombre: "7 de Bastos", palo: "bastos", icon: "fa-fire", d: "Defender tus creencias, perseverancia, estar a la defensiva.", i: "Rendirse, agotamiento." },
+            { nombre: "8 de Bastos", palo: "bastos", icon: "fa-fire", d: "Movimiento rápido, acción, noticias que llegan pronto.", i: "Retrasos, impulsividad, ir demasiado rápido." },
+            { nombre: "9 de Bastos", palo: "bastos", icon: "fa-fire", d: "Resiliencia, último esfuerzo, estar a la defensiva pero firme.", i: "Paranoia, agotamiento extremo." },
+            { nombre: "10 de Bastos", palo: "bastos", icon: "fa-fire", d: "Carga pesada, exceso de responsabilidades, estrés.", i: "Delegar tareas, soltar cargas innecesarias." },
+            { nombre: "Sota de Bastos", palo: "bastos", icon: "fa-fire", d: "Entusiasmo, exploración, espíritu libre.", i: "Falta de dirección, aburrimiento." },
+            { nombre: "Caballo de Bastos", palo: "bastos", icon: "fa-fire", d: "Pasión desbordante, impulsividad, aventuras.", i: "Agresividad, impaciencia." },
+            { nombre: "Reina de Bastos", palo: "bastos", icon: "fa-fire", d: "Confianza, carisma, independencia, valentía.", i: "Exigencia excesiva, inseguridad oculta.", nota: "Me encanta tu confianza amor mio, eres imparable." },
+            { nombre: "Rey de Bastos", palo: "bastos", icon: "fa-fire", d: "Liderazgo inspirador, visión emprendedora.", i: "Dictatorial, prometer más de lo que puede cumplir." },
+
+            // --- ESPADAS (Mente, Intelecto, Conflictos) ---
+            { nombre: "As de Espadas", palo: "espadas", icon: "fa-khanda", d: "Claridad mental, la verdad, ideas brillantes.", i: "Confusión, hostilidad." },
+            { nombre: "2 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Evitar una decisión, estancamiento, negación.", i: "Tomar una decisión difícil." },
+            { nombre: "3 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Dolor emocional, dolor necesario, desilusión.", i: "Sanación, superar el dolor." },
+            { nombre: "4 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Descanso, recuperación mental, meditación.", i: "Agotamiento, negarse a descansar.", nota: "Recuerda que tu mente también necesita descansar mi amor." },
+            { nombre: "5 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Conflicto con pérdidas, orgullo herido, ganar a un alto costo.", i: "Reconciliación, ceder." },
+            { nombre: "6 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Transición hacia la calma, dejar atrás problemas.", i: "Resistencia a seguir adelante, llevar equipaje emocional." },
+            { nombre: "7 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Estrategia, engaño, actuar con sigilo.", i: "Confesar, secretos descubiertos." },
+            { nombre: "8 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Sentirse atrapado mentalmente, creencias limitantes.", i: "Liberarse de ataduras mentales, ver la salida." },
+            { nombre: "9 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Ansiedad, preocupaciones excesivas, pesadillas.", i: "Disipar miedos irreales, buscar ayuda.", nota: "El tipo de cosas qeu de sentiralas me desvivire por escucharte..." },
+            { nombre: "10 de Espadas", palo: "espadas", icon: "fa-khanda", d: "Final doloroso, tocar fondo, victimismo (no hay a dónde ir más que arriba).", i: "Sobrevivir a lo peor, regeneración." },
+            { nombre: "Sota de Espadas", palo: "espadas", icon: "fa-khanda", d: "Curiosidad, comunicación rápida, sed de conocimiento.", i: "Chismes, hablar sin pensar." },
+            { nombre: "Caballo de Espadas", palo: "espadas", icon: "fa-khanda", d: "Acción mental rápida, ir directo al grano, impulsividad intelectual.", i: "Falta de tacto, precipitarse." },
+            { nombre: "Reina de Espadas", palo: "espadas", icon: "fa-khanda", d: "Claridad, honestidad, independencia intelectual, objetividad.", i: "Frialdad, excesiva crítica." },
+            { nombre: "Rey de Espadas", palo: "espadas", icon: "fa-khanda", d: "Lógica, autoridad mental, justicia estricta.", i: "Crueldad mental, tiranía." },
+
+            // --- OROS (Dinero, Trabajo, Salud, Materia) ---
+            { nombre: "As de Oros", palo: "oros", icon: "fa-coins", d: "Nueva oportunidad financiera, prosperidad, inicio sólido.", i: "Oportunidad perdida, retrasos financieros." },
+            { nombre: "2 de Oros", palo: "oros", icon: "fa-coins", d: "Malabarismos, equilibrio financiero, adaptabilidad.", i: "Desequilibrio, tomar demasiadas tareas." },
+            { nombre: "3 de Oros", palo: "oros", icon: "fa-coins", d: "Trabajo en equipo, colaboración, maestría.", i: "Falta de coordinación, ignorar consejos." },
+            { nombre: "4 de Oros", palo: "oros", icon: "fa-coins", d: "Seguridad material, ahorro, posesividad, miedo a perder.", i: "Generosidad, gastar en exceso." },
+            { nombre: "5 de Oros", palo: "oros", icon: "fa-coins", d: "Dificultad material, sentirse excluido, pobreza.", i: "Recuperación, encontrar ayuda inesperada." },
+            { nombre: "6 de Oros", palo: "oros", icon: "fa-coins", d: "Generosidad, dar y recibir, equilibrio material.", i: "Deudas, dar con condiciones." },
+            { nombre: "7 de Oros", palo: "oros", icon: "fa-coins", d: "Paciencia, evaluar el progreso, recompensa a largo plazo.", i: "Impaciencia, esfuerzo sin resultados aparentes." },
+            { nombre: "8 de Oros", palo: "oros", icon: "fa-coins", d: "Dedicación, perfeccionar habilidades, trabajo detallado.", i: "Falta de concentración, trabajo descuidado." },
+            { nombre: "9 de Oros", palo: "oros", icon: "fa-coins", d: "Independencia financiera, disfrutar de los lujos, éxito personal.", i: "Dependencia financiera, fingir éxito.", nota: "Admiro tu independencia y todo lo que logras por ti misma." },
+            { nombre: "10 de Oros", palo: "oros", icon: "fa-coins", d: "Legado familiar, riqueza duradera, seguridad a largo plazo.", i: "Pérdida financiera familiar, disputas por dinero." },
+            { nombre: "Sota de Oros", palo: "oros", icon: "fa-coins", d: "Nuevas habilidades, estudiante aplicado, oportunidad práctica.", i: "Procrastinación, falta de avance." },
+            { nombre: "Caballo de Oros", palo: "oros", icon: "fa-coins", d: "Trabajo duro, rutina, progreso lento pero seguro.", i: "Terquedad, estancamiento por rutina." },
+            { nombre: "Reina de Oros", palo: "oros", icon: "fa-coins", d: "Pragmatismo, proveedora, hogar acogedor, éxito práctico.", i: "Exceso de materialismo, descuido del hogar." },
+            { nombre: "Rey de Oros", palo: "oros", icon: "fa-coins", d: "Riqueza, negocios exitosos, seguridad y estabilidad.", i: "Obsesión por el dinero, avaricia." }
+        ];
+
+        let filtroActual = 'todos';
+
+        // --- ACCESIBILIDAD ---
+        let currentZoom = 100;
+
+        function toggleA11y(event) {
+            event.stopPropagation();
+            document.getElementById('menu-a11y').classList.toggle('hidden');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function changeFontSize(step) {
+            if (step === 0) {
+                currentZoom = 100;
+            } else {
+                currentZoom += step * 10;
+                if (currentZoom < 80) currentZoom = 80; // Mínimo 80%
+                if (currentZoom > 150) currentZoom = 150; // Máximo 150%
+            }
+            document.documentElement.style.fontSize = currentZoom + '%';
+        }
+
+        // Cierra el menú si se hace clic afuera
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('menu-a11y');
+            if (menu && !menu.classList.contains('hidden') && !event.target.closest('.relative')) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Inicialización
+        window.onload = () => {
+            renderizarDiccionario();
+            prepararNuevaFlashcard();
+        };
+
+        // Cambio de pestañas
+        function switchTab(tab) {
+            document.getElementById('sec-diccionario').classList.add('hidden');
+            document.getElementById('sec-practica').classList.add('hidden');
+            
+            document.getElementById('tab-diccionario').className = 'pb-1 px-2 text-gray-600 hover:text-purple-700 transition-colors';
+            document.getElementById('tab-practica').className = 'pb-1 px-2 text-gray-600 hover:text-purple-700 transition-colors';
+            
+            document.getElementById(`sec-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = 'tab-active pb-1 px-2 transition-colors';
+        }
+
+        // Renderizar diccionario
+        function renderizarDiccionario(busqueda = '') {
+            const grid = document.getElementById('grid-cartas');
+            grid.innerHTML = '';
+
+            const filtradas = cartas.filter(c => {
+                const matchPalo = filtroActual === 'todos' || c.palo === filtroActual;
+                const matchBusqueda = c.nombre.toLowerCase().includes(busqueda.toLowerCase());
+                return matchPalo && matchBusqueda;
+            });
+
+            filtradas.forEach(c => {
+                let colorClase = `theme-${c.palo}`;
+                let textColor = c.palo === 'mayores' ? 'text-purple-600' : 
+                                c.palo === 'copas' ? 'text-blue-600' : 
+                                c.palo === 'bastos' ? 'text-red-600' : 
+                                c.palo === 'espadas' ? 'text-gray-600' : 'text-yellow-600';
+
+                let html = `
+                    <div class="tarjeta-diccionario p-4 flex flex-col h-full border-t-4 ${colorClase}">
+                        <div class="flex items-center gap-3 mb-3 pb-2 border-b border-gray-100">
+                            <i class="fa-solid ${c.icon} ${textColor} text-xl"></i>
+                            <h3 class="font-title font-bold text-lg text-gray-800 leading-tight">${c.nombre}</h3>
+                        </div>
+                        <div class="space-y-2 flex-grow text-sm">
+                            <p><span class="font-bold text-green-600 uppercase text-xs tracking-wide">D:</span> <span class="text-gray-700">${c.d}</span></p>
+                            <p><span class="font-bold text-red-600 uppercase text-xs tracking-wide">I:</span> <span class="text-gray-700">${c.i}</span></p>
+                        </div>
+                        ${c.nota ? `<div class="nota-amor mt-3"><i class="fa-solid fa-heart mr-1"></i> ${c.nota}</div>` : ''}
+                    </div>
+                `;
+                grid.innerHTML += html;
+            });
+        }
+
+        function filtrarCartas() {
+            const texto = document.getElementById('busqueda').value;
+            renderizarDiccionario(texto);
+        }
+
+        function setFiltro(palo) {
+            filtroActual = palo;
+            
+            // Actualizar botones visualmente
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                btn.classList.remove('bg-purple-100', 'text-purple-800', 'font-semibold');
+                btn.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            event.currentTarget.classList.remove('bg-gray-100', 'text-gray-600');
+            event.currentTarget.classList.add('bg-purple-100', 'text-purple-800', 'font-semibold');
+            
+            filtrarCartas();
+        }
+
+        let cartaActual = null;
+        let volteada = false;
+
+        function voltearCarta() {
+            const fc = document.getElementById('flashcard');
+            volteada = !volteada;
+            if(volteada) {
+                fc.classList.add('flipped');
+            } else {
+                fc.classList.remove('flipped');
+            }
+        }
+
+        function prepararNuevaFlashcard() {
+            const index = Math.floor(Math.random() * cartas.length);
+            cartaActual = cartas[index];
+
+            // Colores por palo
+            let textColor = cartaActual.palo === 'mayores' ? 'text-purple-600' : 
+                            cartaActual.palo === 'copas' ? 'text-blue-600' : 
+                            cartaActual.palo === 'bastos' ? 'text-red-600' : 
+                            cartaActual.palo === 'espadas' ? 'text-gray-600' : 'text-yellow-600';
+
+            // Frente
+            document.getElementById('fc-icono').className = `text-5xl mb-4 ${textColor}`;
+            document.getElementById('fc-icono').innerHTML = `<i class="fa-solid ${cartaActual.icon}"></i>`;
+            document.getElementById('fc-palo').innerText = cartaActual.palo === 'mayores' ? 'Arcano Mayor' : `Palo de ${cartaActual.palo}`;
+            document.getElementById('fc-nombre').innerText = cartaActual.nombre;
+
+            // Dorso
+            document.getElementById('fc-resp-nombre').innerText = cartaActual.nombre;
+            document.getElementById('fc-derecho').innerText = cartaActual.d;
+            document.getElementById('fc-invertido').innerText = cartaActual.i;
+
+            const notaCont = document.getElementById('fc-nota-container');
+            if(cartaActual.nota) {
+                document.getElementById('fc-nota').innerText = cartaActual.nota;
+                notaCont.classList.remove('hidden');
+            } else {
+                notaCont.classList.add('hidden');
+            }
+        }
+
+        function siguienteFlashcard() {
+            if(volteada) {
+                voltearCarta();
+                setTimeout(prepararNuevaFlashcard, 400); // Esperar que termine de girar
+            } else {
+                prepararNuevaFlashcard();
+            }
+        }
+    </script>
+</body>
+</html>
